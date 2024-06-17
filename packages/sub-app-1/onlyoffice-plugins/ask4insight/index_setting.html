@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Setting</title>
+    <script type="text/javascript" src="https://onlyoffice.github.io/sdkjs-plugins/v1/plugins.js"></script>
+    <script type="text/javascript" src="https://onlyoffice.github.io/sdkjs-plugins/v1/plugins-ui.js"></script>
+    <link rel="stylesheet" href="https://onlyoffice.github.io/sdkjs-plugins/v1/plugins.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background-color: #f2f2f2;
+        }
+
+        div {
+            margin-bottom: 10px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+        }
+
+        select,
+        input {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            box-sizing: border-box;
+        }
+    </style>
+    <script type="text/javascript">
+        const modelConfigList = []
+        window.Asc.plugin.init = function () {
+            fetch("/api/v1/office/modelconfig", {
+                method: 'GET',
+                headers: {
+                    "Content-Type": "application/json",
+                }
+            }).then((response) => response.json())
+                .then((data) => {
+                    modelConfigList.push(...data.result.data)
+                    const innerHTML = modelConfigList.map((v, index) => {
+                        const { key: label, value } = v;
+                        return `<option value="${value}">${label}</option>`
+                    })
+                    document.getElementById("modelSelection").innerHTML = innerHTML.join('')
+                    document.getElementById('modelSelection').value = modelConfigList[0].value
+                });
+        };
+
+        window.Asc.plugin.button = function (id) {
+            if (id === -1) {
+                this.executeCommand('close', '')
+            } else {
+                let model = document.getElementById('modelSelection').value;
+                const target = modelConfigList.find((fv) => {
+                    return fv.value === model
+                })
+                const { url, value } = target;
+                localStorage.setItem('model', value);
+                localStorage.setItem('url', url);
+                this.executeCommand("close", "");
+            }
+        };
+    </script>
+</head>
+
+<body>
+    <div>
+        <label for="modelSelection" id="label_chooseModel">选择模型</label>
+        <select id="modelSelection">
+            <!-- <option value="chatglm[glm-3-turbo]">智普(ChatGLM3-Turbo)</option>
+            <option value="chatglm[glm-4]">智普(ChatGLM4)</option>
+            <option value="bailian[qwen-turbo]">百炼(Qwen-Turbo)</option>
+            <option value="bailian[qwen-plus]">百炼(Qwen-plus)</option>
+            <option value="fangzhou[skylark-plus-public]">方舟(Skylark-Plus-Public)</option>
+            <option value="qianfan[ERNIE-Bot-4]">千帆(ERNIE-Bot-4)</option> -->
+        </select>
+    </div>
+    <!-- <div>
+        <label for="apiBaseInput">模型 API Base:</label>
+        <input type="text" id="apiBaseInput" placeholder="Set LLM API Base">
+    </div>
+    <div>
+        <label for="tokenInput">模型 AI API:</label>
+        <input type="text" id="tokenInput" placeholder="Set LLM API KEY">
+    </div> -->
+</body>
+
+</html>

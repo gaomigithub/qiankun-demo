@@ -1,15 +1,15 @@
 {
   "name": "sub-app-1",
+  "private": true,
+  "author": "huangaipeng <jushin@foxmail.com>",
   "scripts": {
-    "dev": "umi dev",
-    "build": "umi build",
-    "postinstall": "umi generate tmp",
+    "build": "cross-env UMI_ENV=prod max build",
+    "dev": "max dev",
+    "format": "prettier --cache --write .",
+    "postinstall": "max setup",
     "prettier": "prettier --write '**/*.{js,jsx,tsx,ts,less,md,json}'",
-    "test": "umi-test",
-    "test:coverage": "umi-test --coverage"
-  },
-  "gitHooks": {
-    "pre-commit": "lint-staged"
+    "setup": "max setup",
+    "start": "npm run dev"
   },
   "lint-staged": {
     "*.{js,jsx,less,md,json}": [
@@ -20,26 +20,42 @@
     ]
   },
   "dependencies": {
-    "@ant-design/icons": "^4.7.0",
-    "@umijs/plugin-antd": "^0.15.0",
-    "@umijs/plugin-initial-state": "^2.4.0",
-    "@umijs/plugin-model": "^2.6.2",
-    "antd": "^4.22.3",
+    "@alifd/layout": "^2.4.1",
+    "@alilc/lowcode-datasource-fetch-handler": "^1.1.4",
+    "@alilc/lowcode-react-renderer": "^1.3.2",
+    "@ant-design/icons": "^5.0.1",
+    "@ant-design/pro-components": "^2.7.1",
+    "@chatui/core": "^2.4.2",
+    "@monaco-editor/react": "^4.6.0",
+    "@onlyoffice/document-editor-react": "^1.5.1",
+    "@types/lodash": "^4.17.0",
+    "@umijs/max": "^4.1.6",
+    "ahooks": "^3.7.11",
+    "antd": "^5.4.0",
+    "blueimp-md5": "^2.19.0",
+    "cross-env": "^7.0.3",
+    "humps": "^2.0.1",
+    "jotai": "^2.8.0",
+    "js-base64": "^3.7.7",
     "lodash": "^4.17.21",
-    "path-to-regexp": "^6.2.1",
+    "lodash-es": "^4.17.21",
+    "moment": "^2.30.1",
     "qiankun": "^2.7.4",
-    "react": "17.x",
-    "react-dom": "17.x",
-    "umi": "3.x"
+    "querystring": "^0.2.1",
+    "rc-field-form": "^2.0.0",
+    "react-cookies": "^0.1.1",
+    "react-typewriter-hook": "^1.0.2",
+    "umi-request": "^1.4.0"
   },
   "devDependencies": {
-    "@types/react": "^17.0.0",
-    "@types/react-dom": "^17.0.0",
+    "@types/react": "^18.0.33",
+    "@types/react-dom": "^18.0.11",
     "@umijs/plugin-qiankun": "^2.39.2",
-    "@umijs/test": "^3.5.32",
-    "lint-staged": "^10.0.7",
-    "prettier": "^2.2.0",
-    "typescript": "^4.1.2",
-    "yorkie": "^2.0.0"
+    "husky": "^9",
+    "lint-staged": "^13.2.0",
+    "prettier": "^3.2.5",
+    "prettier-plugin-organize-imports": "^3.2.2",
+    "prettier-plugin-packagejson": "^2.4.3",
+    "typescript": "^5.0.3"
   }
 }

@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title></title>
+  <!-- 引入组件库 -->
+  <script src="jquery.js"></script>
+  <script src="plugins.min.js"></script>
+  <script src="vue.global.prod.js"></script>
+  <script src="select2.min.js"></script>
+  <script src="zh-CN.js"></script>
+  <!-- 引入样式 -->
+  <link rel="stylesheet" href="select2.min.css" />
+  <style>
+    html,
+    body {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      width: 100%;
+    }
+
+    #app {
+      position: relative;
+      height: 100%;
+      width: 100%;
+      overflow: hidden;
+      padding: 12px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .save-variate {
+      margin-top: 10px;
+      width: 100%;
+      height: 30px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: #ffffff;
+      font-size: 16px;
+      background-color: rgb(32, 167, 201);
+      border: none;
+      cursor: pointer;
+    }
+
+    .origin-input {
+      width: 100%;
+    }
+
+    .variate-box {
+      display: flex;
+      flex-direction: column;
+      justify-content: left;
+    }
+
+    .variate-box .title {
+      font-size: 14px;
+      margin-bottom: 10px;
+      margin-top: 10px;
+    }
+
+    .variate-box:first-of-type .title {
+      margin-top: 0;
+    }
+
+    .content-box {
+      width: 100%;
+    }
+
+    .custom-varname-input {
+      box-sizing: border-box;
+      border-color: #cfcfcf;
+      border-width: 1px;
+      width: 100% !important;
+      height: 28px !important;
+    }
+
+    .select-status {
+      width: 100%;
+    }
+
+
+    .varname-list {
+      flex: 1;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .scroll-box {
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .varname-list-box {
+      height: 100%;
+      padding: 10px 0;
+      margin: 0;
+      box-sizing: border-box;
+      overflow-y: auto;
+      background-color: #ffffff;
+      list-style: none;
+    }
+
+    .varname-list-box li {
+      padding: 0 6px;
+      border-bottom: 1px solid #f4f4f4;
+      line-height: 2em;
+    }
+
+    .varname-list-box li:hover {
+      background-color: #f0f0f0;
+    }
+
+    /* 变量成员 */
+    .varname-list-item {
+      padding: 4px 6px;
+      line-height: 1.5em;
+      cursor: pointer;
+    }
+
+    /*  */
+    .select-box {
+      padding: 10px 6px;
+      background-color: antiquewhite;
+      border-radius: 6px;
+      height: 60px;
+      box-sizing: border-box;
+    }
+
+    /*  */
+    .select-text {
+      font-size: 14px;
+      color: #6b7ec6;
+      overflow: hidden;
+      /* 确保超出的内容会被隐藏 */
+      display: -webkit-box;
+      /* 使用弹性盒子布局模型 */
+      -webkit-line-clamp: 2;
+      /* 限制在3行 */
+      -webkit-box-orient: vertical;
+      /* 垂直排列盒子 */
+      text-overflow: ellipsis;
+      /* 多行时显示省略号 */
+      white-space: normal;
+      /* 使用正常的白空格处理方式，必须的 */
+    }
+
+    .select2-container--default .select2-selection--single {
+      border-radius: 0;
+    }
+
+
+    .geBackground {
+      position: absolute;
+      height: 532px;
+      right: 0px;
+      z-index: 10002;
+      opacity: 0.8;
+      left: 0px;
+      top: 0px;
+    }
+
+    .dailog-box {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: absolute;
+      z-index: 10002;
+      background-color: rgba(122, 122, 122, .6);
+      box-shadow: 0px 0px 2px 2px #d5d5d5;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+    }
+
+    .dailog-model {
+      width: 95%;
+      /* height: 350px; */
+      background-color: #ffffff;
+      display: flex;
+      align-items: center;
+      flex-direction: column;
+    }
+
+    .dailog-header {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      position: relative;
+      width: 100%;
+      height: 40px;
+      box-sizing: border-box;
+      background: rgb(229, 229, 229);
+      border-bottom: 1px solid rgb(192, 192, 192);
+      font-size: 15px;
+      font-weight: bold;
+      color: rgb(35, 86, 149);
+    }
+
+    .dailog-content {
+      width: 100%;
+      flex: 1;
+      box-sizing: border-box;
+      padding: 8px 4px 18px 4px;
+    }
+
+    .dailog-content-title {
+      font-size: 14px;
+      line-height: 22px;
+      margin-top: 10px;
+    }
+
+    .dailog-content-input input {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 4px 11px;
+      color: rgba(0, 0, 0, 0.88);
+      font-size: 14px;
+      line-height: 1.5714285714285714;
+      list-style: none;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, 'Noto Sans', sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol', 'Noto Color Emoji';
+      position: relative;
+      display: inline-block;
+      width: 100%;
+      min-width: 0;
+      border-radius: 2px;
+      transition: all 0.2s;
+      border-width: 1px;
+    }
+
+    .dailog-footer {
+      width: 100%;
+      height: 40px;
+      white-space: nowrap;
+      background: rgb(229, 229, 229);
+      border-top: 1px solid rgb(192, 192, 192);
+      font-size: 15px;
+      font-weight: bold;
+      text-align: center;
+      color: rgb(35, 86, 149);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .dailog-close-icon {
+      display: inline-block;
+      width: 20px;
+      height: 20px;
+      position: absolute;
+      right: 10px;
+      top: 10px;
+      cursor: pointer;
+      background-image: url(close.png);
+      background-size: 100% 100%;
+    }
+
+    .dailog-close-icon:hover {
+      background-color: #cfcfcf;
+    }
+
+    .dailog-footer button {
+      width: 72px;
+      height: 30px;
+      /* background-color: rgb(77, 144, 254); */
+      background-color: rgb(32, 167, 201);
+      /* background-image: linear-gradient(rgb(77, 144, 254) 0px, rgb(71, 135, 237) 100%); */
+      color: rgb(255, 255, 255);
+      border-width: 1px;
+      border-style: solid;
+      border-color: rgb(48, 121, 237);
+      border-image: initial;
+      border-radius: 4px;
+      cursor: pointer;
+    }
+
+    .dailog-footer .cancel {
+      color: #2c2d2d;
+      background: #eee;
+      border: 1px solid #d8d8d8;
+    }
+
+    .complete {
+      margin-left: 20px;
+    }
+  </style>
+</head>
+
+<body>
+  <div id="app" v-cloak>
+    <div class="variate-box">
+      <div class="title">选中文本：</div>
+      <div class="select-box">
+        <div class="select-text" v-show="selectText">
+          {{selectText}}
+        </div>
+      </div>
+    </div>
+    <div class="variate-box">
+      <!-- <div class="title">变量名称：</div>
+      <div class="content-box">
+        <input class="custom-varname-input" type="text" v-model="customVarname">
+      </div> -->
+      <button class="save-variate" @click="bindNewVarname">绑定新变量</button>
+    </div>
+    <div class="variate-box">
+      <div class="title">变量名称：</div>
+      <div class="content-box">
+        <select class="select-status" name="select-status">
+          <option :value="id" v-for="{id,label} in variateOption" :key="id">{{label}}</option>
+        </select>
+      </div>
+      <button class="save-variate" @click="onSaveVariate">绑定变量</button>
+    </div>
+
+    <div class="variate-box varname-list" style="height: calc(100% - 310px);">
+      <div class="title">定位变量：</div>
+      <div class="scroll-box" id="scroll-box">
+        <ul class="varname-list-box">
+          <li @click="onClickVarnameItem(item)" class="varname-list-item" v-for="(item,index) in templateVarnameList"
+            :key="index">
+            <div style="color: #349ac0;">{{item.varname}}</div>
+            <div style="line-height: 1.4em;">
+              {{item.label}}
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="dailog-box" v-if="dailog">
+      <div class="dailog-model">
+        <div class="dailog-header">
+          绑定新变量
+          <span class="dailog-close-icon" @click="closeDailog"></span>
+        </div>
+        <div class="dailog-content">
+          <div class="dailog-content-title">名称</div>
+          <div class="dailog-content-input">
+            <input type="text" v-model="newVarnameObj.label">
+          </div>
+          <div class="dailog-content-title">变量名</div>
+          <div class="dailog-content-input">
+            <input type="text" :disabled="true" v-model="newVarnameObj.varname">
+          </div>
+          <div class="dailog-content-title">默认值</div>
+          <div class="dailog-content-input">
+            <input type="text" :disabled="true" v-model="newVarnameObj.varname_value">
+          </div>
+        </div>
+        <div class="dailog-footer">
+          <button class="cancel" @click="closeDailog">取消</button>
+          <button class="complete" @click="addNewVarname">完成</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <script src="main.js"></script>
+</body>
+
+</html>

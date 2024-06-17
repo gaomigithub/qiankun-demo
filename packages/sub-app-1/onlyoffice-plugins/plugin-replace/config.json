@@ -1,0 +1,28 @@
+{
+  "name": "替换变量",
+  "guid": "asc.{19294-19333}",
+  "variations": [
+    {
+      "description": "Replace the variable character of the text with the value of the bound variable",
+      "url": "index.html",
+      "icons": [
+        "icon.png",
+        "icon@2x.png"
+      ],
+      "isViewer": false,
+      "EditorsSupport": [
+        "word"
+      ],
+      "isVisual": true,
+      "isModal": false,
+      "isInsideMode": true,
+      "initDataType": "text",
+      "initData": "",
+      "isUpdateOleOnResize": false,
+      "buttons": [],
+      "events" : [
+        "onClick"
+      ]
+    }
+  ]
+}
